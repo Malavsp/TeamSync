@@ -1,5 +1,5 @@
-export type Employee = {
-  id: number;
+export type User = {
+  uid: number;
   fname: string;
   lname: string;
   email: string;
@@ -13,3 +13,5 @@ export type Department = {
   id: number;
   name: string;
 };
+
+export type UserAndDept = User & Department;
