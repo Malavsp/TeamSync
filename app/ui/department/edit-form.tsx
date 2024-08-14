@@ -1,6 +1,9 @@
 "use client";
 
-const EditForm = () => {
+import { Department } from "@/lib/definitions";
+import Link from "next/link";
+
+const EditForm = ({ department }: { department: Department }) => {
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-col items-center w-full max-w-md p-8 bg-white rounded-lg shadow-md">
@@ -16,18 +19,25 @@ const EditForm = () => {
             <input
               type="text"
               name="department"
-              placeholder="Enter Department"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              autoComplete="off"
-              // defaultValue={""}
+              className="bg-gray-50 border border-gray-300 text-black-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              defaultValue={department.name}
+              required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Edit
-          </button>
+          <div className="ml-16 mt-10">
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Edit
+            </button>
+            <Link
+              href="/admin/department"
+              className="m-9 rounded-lg bg-gray-100 p-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+            >
+              Cancel
+            </Link>
+          </div>
         </form>
       </div>
     </div>
