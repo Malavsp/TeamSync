@@ -1,4 +1,4 @@
-import { fetchUserById } from "@/lib/data";
+import { fetchEmployeeById } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,7 +6,7 @@ import React from "react";
 
 const Page = async ({ params }: { params: { id: string } }) => {
   const id = Number(params.id);
-  const user = await fetchUserById(id);
+  const user = await fetchEmployeeById(id);
 
   if (!user) {
     notFound();

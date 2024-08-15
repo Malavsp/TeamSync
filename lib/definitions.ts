@@ -6,7 +6,7 @@ export type User = {
   password: string;
   salary?: number;
   role: string;
-  department_id: number;
+  department_id?: number;
 };
 
 export type Department = {

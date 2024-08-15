@@ -92,7 +92,7 @@ const Page = async () => {
                   <td className="px-6 py-4">{e.name}</td>
                   <td className="px-6 py-4">
                     <UpdateButton url={`employee/${e.uid}`} />
-                    <DeleteButton id={e.uid} />
+                    <DeleteButton id={e.uid} tableName="Users" />
                   </td>
                 </tr>
               ))}

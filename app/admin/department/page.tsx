@@ -25,7 +25,7 @@ const Department = async () => {
             <thead className="text-sm text-gray-700 text-left uppercase bg-gray-50 ">
               <tr>
                 <th scope="col" className="hidden sm:block px-6 py-3">
-                  ID
+                  Id.
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Name
@@ -49,12 +49,8 @@ const Department = async () => {
                   </th>
                   <td className=" py-4">{d.name}</td>
                   <td className="px-6 py-4">
-                    {/* <Link
-                      className="group/edit invisible hover:color-black-700 group-hover/item:visible ..."
-                      href={/admin/${id}}
-                    ></Link> */}
-                    <UpdateButton url={department/${d.id}} />
-                    <DeleteButton id={d.id} />
+                    <UpdateButton url={`department/${d.id}`} />
+                    <DeleteButton id={d.id} tableName="Department" />
                   </td>
                 </tr>
               ))}

@@ -15,7 +15,7 @@ async function fetchAllDepartments(): Promise<Department[]> {
   }
 }
 
-async function fetchDepartmentById(id: number) {
+async function fetchDepartmentById(id: number): Promise<Department> {
   noStore();
   try {
     const stmnt = `SELECT * FROM Department WHERE id = $1`;
@@ -28,7 +28,7 @@ async function fetchDepartmentById(id: number) {
   }
 }
 
-async function fetchAllAdmins() {
+async function fetchAllAdmins(): Promise<User[]> {
   noStore();
   try {
     const stmnt = "SELECT * FROM Users WHERE role = 'admin'";
@@ -42,18 +42,21 @@ async function fetchAllAdmins() {
   }
 }
 
-// async function fetchUserById(id: number) {
-//   noStore();
-//   try {
-//     const stmnt = "SELECT * FROM Users WHERE id = $1";
-//     const data = await client.query(stmnt);
-//     console.log(data.rows);
-//   } catch (error) {
-//     console.error("Error in fetching empoyee by given Id", error);
-//   }
-// }
+async function fetchAdminById(id: number): Promise<User> {
+  noStore();
+  try {
+    const stmnt = "SELECT * FROM Users WHERE Users.uid = $1";
 
-async function fetchUserById(id: number): Promise<User & Department> {
+    const data = await client.query(stmnt, [id]);
+    console.log(data.rows[0]);
+    return data.rows[0];
+  } catch (error) {
+    console.error("Error in fetching empoyee by given Id", error);
+    throw new Error();
+  }
+}
+
+async function fetchEmployeeById(id: number): Promise<UserAndDept> {
   noStore();
   try {
     const stmnt =
@@ -85,8 +88,9 @@ async function fetchAllEmployees(): Promise<UserAndDept[]> {
 
 export {
   fetchAllAdmins,
+  fetchAdminById,
   fetchAllDepartments,
   fetchDepartmentById,
   fetchAllEmployees,
-  fetchUserById,
+  fetchEmployeeById,
 };

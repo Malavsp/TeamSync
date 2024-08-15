@@ -25,7 +25,7 @@ const Page = async () => {
                 <th scope="col" className="px-6 py-3">
                   Email
                 </th>
-                <th scope="col" className="px-6 py-3"></th>
+                {/* <th scope="col" className="px-6 py-3"></th> */}
               </tr>
             </thead>
             <tbody>
@@ -46,9 +46,6 @@ const Page = async () => {
                       className="rounded-full"
                     />
                     {admin.fname}
-                  </th>
-                  <td className="px-6 py-4">{admin.email}</td>
-                  <td className="px-6 py-4">
                     <Link
                       className="group/edit invisible hover:color-black-700 group-hover/item:visible ..."
                       href={`/admin/${admin.uid}`}
@@ -75,7 +72,8 @@ const Page = async () => {
                         </svg>
                       </span>
                     </Link>
-                  </td>
+                  </th>
+                  <td className="px-6 py-4">{admin.email}</td>
                 </tr>
               ))}
             </tbody>
