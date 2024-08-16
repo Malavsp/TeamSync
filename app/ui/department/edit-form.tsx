@@ -1,14 +1,16 @@
 "use client";
 
+import { updateDepartment } from "@/lib/actions";
 import { Department } from "@/lib/definitions";
 import Link from "next/link";
 
 const EditForm = ({ department }: { department: Department }) => {
+  const updateDepartmentById = updateDepartment.bind(null, department.id);
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-col items-center w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4">Edit Department</h2>
-        <form className="w-full">
+        <form className="w-full" action={updateDepartmentById}>
           <div className="mb-5">
             <label
               htmlFor="department"
