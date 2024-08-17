@@ -2,13 +2,22 @@
 
 import { createDepartment } from "@/lib/actions";
 import Link from "next/link";
+import { useFormState } from "react-dom";
+import { DepartmentState } from "@/lib/actions";
 
 const CreateForm = () => {
+  const initialState: DepartmentState = {
+    message: null,
+    errors: {},
+  };
+
+  const [state, formAction] = useFormState(createDepartment, initialState);
+
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-col items-center w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-xl font-bold mb-4">Create Department</h2>
-        <form className="w-full" action={createDepartment}>
+        <form className="w-full" action={formAction}>
           <div className="mb-5">
             <label
               htmlFor="department"
@@ -22,7 +31,21 @@ const CreateForm = () => {
               placeholder="Enter Department Name"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               autoComplete="off"
+              required
             />
+            <div>
+              {state.errors?.departmentName &&
+                state.errors.departmentName.map((error) => (
+                  <p key={error} className="text-sm text-red-500">
+                    {error}
+                  </p>
+                ))}
+            </div>
+            <div>
+              {state.message && (
+                <p className="text-sm text-red-500 mt-2">{state.message}</p>
+              )}
+            </div>
           </div>
           <div className="ml-16 mt-10">
             <button

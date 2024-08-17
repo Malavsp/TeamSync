@@ -7,10 +7,6 @@ import { notFound } from "next/navigation";
 const Department = async () => {
   const departments = await fetchAllDepartments();
 
-  if (!departments) {
-    notFound();
-  }
-
   return (
     <div className="px-5 mt-3">
       <div className="d-flex justify-content-center">

@@ -3,7 +3,8 @@
 import { Department, UserAndDept } from "@/lib/definitions";
 import Link from "next/link";
 import Image from "next/image";
-import { updateEmployee } from "@/lib/actions";
+import { EmployeeState, updateEmployee } from "@/lib/actions";
+import { useFormState } from "react-dom";
 
 const EditForm = ({
   user,
@@ -12,9 +13,12 @@ const EditForm = ({
   user: UserAndDept;
   departments: Department[];
 }) => {
+  const initialState: EmployeeState = { errors: {}, message: null };
   const updateEmployeeById = updateEmployee.bind(null, user.uid);
+  const [state, formAction] = useFormState(updateEmployeeById, initialState);
+
   return (
-    <form className="max-w-md m-auto" action={updateEmployeeById}>
+    <form className="max-w-md m-auto" action={formAction}>
       <Image
         src={"/placeh.png"}
         height={20}
@@ -31,6 +35,14 @@ const EditForm = ({
           defaultValue={user.email}
           required
         />
+        <div>
+          {state.errors?.email &&
+            state.errors.email.map((error) => (
+              <p key={error} className="text-sm text-red-500">
+                {error}
+              </p>
+            ))}
+        </div>
         <label
           htmlFor="email"
           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -46,6 +58,14 @@ const EditForm = ({
           defaultValue={user.password}
           required
         />
+        <div>
+          {state.errors?.password &&
+            state.errors.password.map((error) => (
+              <p key={error} className="text-sm text-red-500">
+                {error}
+              </p>
+            ))}
+        </div>
         <label
           htmlFor="password"
           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -63,6 +83,14 @@ const EditForm = ({
             defaultValue={user.fname}
             required
           />
+          <div>
+            {state.errors?.firstName &&
+              state.errors.firstName.map((error) => (
+                <p key={error} className="text-sm text-red-500">
+                  {error}
+                </p>
+              ))}
+          </div>
           <label
             htmlFor="fname"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -79,6 +107,14 @@ const EditForm = ({
             defaultValue={user.lname}
             required
           />
+          <div>
+            {state.errors?.lastName &&
+              state.errors.lastName.map((error) => (
+                <p key={error} className="text-sm text-red-500">
+                  {error}
+                </p>
+              ))}
+          </div>
           <label
             htmlFor="lname"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -97,6 +133,19 @@ const EditForm = ({
             defaultValue={user.salary}
             required
           />
+          <div>
+            {state.errors?.salary &&
+              state.errors.salary.map((error) => (
+                <p key={error} className="text-sm text-red-500">
+                  {error}
+                </p>
+              ))}
+          </div>
+          <div>
+            {state.message && (
+              <p className="text-sm text-red-500 mt-2">{state.message}</p>
+            )}
+          </div>
           <label
             htmlFor="salary"
             className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transhtmlForm -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -108,8 +157,8 @@ const EditForm = ({
           <select
             name="department"
             className="block p-2.5 rounded-md w-full text-sm text-gray-900 bg-transparent border-2 border-gray-300 appearance-none  dark:text-white dark:border-gray-600 dark:focus:border-blue-500    focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            required
             defaultValue={user.department_id}
+            required
           >
             <option value="" disabled>
               Select Department
@@ -120,6 +169,14 @@ const EditForm = ({
               </option>
             ))}
           </select>
+          <div>
+            {state.errors?.departmentId &&
+              state.errors.departmentId.map((error) => (
+                <p key={error} className="text-sm text-red-500">
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
       </div>
       <button

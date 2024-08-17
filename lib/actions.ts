@@ -9,10 +9,13 @@ import { z } from "zod";
 // Employee Form Validation
 const EmployeeFormSchema = z.object({
   id: z.number(),
-  email: z.string().email(),
-  password: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
+  email: z.string().email({ message: "Please enter valid email address" }),
+  password: z
+    .string()
+    .trim()
+    .min(8, { message: "Password must contain at least 8 characters" }),
+  firstName: z.string().trim().min(2, { message: "Please enter first name" }),
+  lastName: z.string().trim().min(2, { message: "Please enter last name" }),
   salary: z.coerce.number(),
   departmentId: z.coerce.number(),
 });
@@ -20,7 +23,10 @@ const EmployeeFormSchema = z.object({
 // Department Form Validation
 const DepartmentFormSchema = z.object({
   id: z.number(),
-  departmentName: z.string(),
+  departmentName: z
+    .string()
+    .trim()
+    .min(2, { message: "Please enter department name" }),
 });
 
 const CreateEmployee = EmployeeFormSchema.omit({ id: true });
@@ -29,22 +35,54 @@ const UpdateEmployee = EmployeeFormSchema.omit({ id: true });
 const CreateDepartment = DepartmentFormSchema.omit({ id: true });
 const UpdateDepartment = DepartmentFormSchema.omit({ id: true });
 
-export async function createEmployee(formData: FormData) {
+export type DepartmentState = {
+  errors?: {
+    departmentName?: string[];
+  };
+  message?: string | null;
+};
+
+export type EmployeeState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+    firstName?: string[];
+    lastName?: string[];
+    salary?: string[];
+    departmentId?: string[];
+  };
+  message?: string | null;
+};
+
+export async function createEmployee(
+  prevData: EmployeeState,
+  formData: FormData
+) {
+  const validatedFields = CreateEmployee.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+    firstName: formData.get("fname"),
+    lastName: formData.get("lname"),
+    salary: formData.get("salary"),
+    departmentId: formData.get("department"),
+  });
+  const role = "employee"; // as creating new employee
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing required fields. Failed to create employee.",
+    };
+  }
+
   const { email, password, firstName, lastName, salary, departmentId } =
-    CreateEmployee.parse({
-      email: formData.get("email"),
-      password: formData.get("password"),
-      firstName: formData.get("fname"),
-      lastName: formData.get("lname"),
-      salary: formData.get("salary"),
-      departmentId: formData.get("department"),
-    });
-  const role = "employee"; // as create new employee
-  //   console.log(email, password, firstName, lastName, salary, departmentId);
+    validatedFields.data;
+
   try {
-    const stmnt = `INSERT INTO Users (email, password, fname, lname, salary, department_id, role)
-                     VALUES ($1, $2, $3, $4, $5, $6, $7)
-                    `;
+    const stmnt = `
+      INSERT INTO Users (email, password, fname, lname, salary, department_id, role)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+
     await client.query(stmnt, [
       email,
       password,
@@ -56,26 +94,42 @@ export async function createEmployee(formData: FormData) {
     ]);
   } catch (error) {
     console.error(error);
-    return;
+    return { message: "Database Error: Failed to create employee" };
   }
   revalidatePath("/admin/employee");
   redirect("/admin/employee");
 }
-export async function updateEmployee(id: number, formData: FormData) {
+
+export async function updateEmployee(
+  id: number,
+  prevData: EmployeeState,
+  formData: FormData
+) {
+  const validatedFields = UpdateEmployee.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+    firstName: formData.get("fname"),
+    lastName: formData.get("lname"),
+    salary: formData.get("salary"),
+    departmentId: formData.get("department"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing required fields. Failed to edit employee.",
+    };
+  }
+
   const { email, password, firstName, lastName, salary, departmentId } =
-    UpdateEmployee.parse({
-      email: formData.get("email"),
-      password: formData.get("password"),
-      firstName: formData.get("fname"),
-      lastName: formData.get("lname"),
-      salary: formData.get("salary"),
-      departmentId: formData.get("department"),
-    });
-  //   console.log(email, password, firstName, lastName, salary, departmentId, id);
+    validatedFields.data;
+
   try {
     const stmnt = `
-      UPDATE Users SET email = $1, password =$2 , fname=$3, lname=$4, salary=$5, department_id=$6
+      UPDATE Users 
+      SET email = $1, password = $2, fname = $3, lname = $4, salary = $5, department_id = $6
       WHERE uid = $7`;
+
     const res = await client.query(stmnt, [
       email,
       password,
@@ -88,34 +142,60 @@ export async function updateEmployee(id: number, formData: FormData) {
     // console.log(res);
   } catch (error) {
     console.error(error);
-    return;
+    return { message: "Database Error: Failed to update employee" };
   }
   revalidatePath("/admin/employee");
   redirect("/admin/employee");
 }
-export async function createDepartment(formData: FormData) {
-  const { departmentName } = CreateDepartment.parse({
+
+export async function createDepartment(
+  prevData: DepartmentState,
+  formData: FormData
+) {
+  const validatedFields = CreateDepartment.safeParse({
     departmentName: formData.get("department"),
   });
-  //   console.log(departmentName.toUpperCase());
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing required fields. Failed to create department.",
+    };
+  }
+
+  const { departmentName } = validatedFields.data;
+
   try {
-    const stmnt = `INSERT INTO department (name)
+    const stmnt = `
+      INSERT INTO department (name)
       VALUES ($1)`;
+
     const res = await client.query(stmnt, [departmentName.toUpperCase()]);
   } catch (error) {
-    return;
+    return { message: "Database Error: Failed to create department" };
   }
 
   revalidatePath("/admin/department");
   redirect("/admin/department");
 }
 
-export async function updateDepartment(id: number, formData: FormData) {
-  //   console.log(formData.get("department"));
-  //   console.log("in id", id);
-  const { departmentName } = UpdateDepartment.parse({
+export async function updateDepartment(
+  id: number,
+  prevData: DepartmentState,
+  formData: FormData
+) {
+  const validatedFields = UpdateDepartment.safeParse({
     departmentName: formData.get("department"),
   });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing required fields. Failed to edit department.",
+    };
+  }
+
+  const { departmentName } = validatedFields.data;
 
   try {
     const stmnt = `
@@ -126,7 +206,7 @@ export async function updateDepartment(id: number, formData: FormData) {
     const res = await client.query(stmnt, [departmentName, id]);
     // console.log(res);
   } catch (error) {
-    return;
+    return { message: "Database Error: Failed to update department" };
   }
   //   console.log(departmentName);
   revalidatePath("/admin/department");
@@ -144,7 +224,7 @@ export async function deleteById(id: number, tableName: string) {
       const res = await client.query(stmnt, [id]);
     }
   } catch (error) {
-    console.error(error);
+    return { message: `Database Error: Failed to Delete ${tableName}` };
   }
 
   revalidatePath("/admin");
