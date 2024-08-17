@@ -9,10 +9,6 @@ import Image from "next/image";
 const Page = async () => {
   const employees: UserAndDept[] = await fetchAllEmployees();
 
-  if (!employees) {
-    notFound();
-  }
-
   return (
     <div className="px-5 mt-3">
       <div className="d-flex justify-content-center">
