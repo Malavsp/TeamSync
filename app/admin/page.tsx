@@ -1,15 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { fetchAllAdmins } from "@/lib/data";
-import { User } from "@/lib/definitions";
 import { notFound } from "next/navigation";
 
 const Page = async () => {
-  const admins: User[] = await fetchAllAdmins();
+  const admins = await fetchAllAdmins();
 
-  if (!admins) {
-    notFound();
-  }
+  // if (!admins) {
+  //   notFound();
+  // }1
 
   return (
     <div className="ms-3 mt-5">
