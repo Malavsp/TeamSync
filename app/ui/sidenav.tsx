@@ -1,3 +1,4 @@
+import { signOut } from "@/auth";
 import Link from "next/link";
 
 const SideNav = () => {
@@ -38,7 +39,7 @@ const SideNav = () => {
         </li>
         <li>
           <Link
-            href="/profile"
+            href="/admin/profile"
             className="flex items-center text-black hover:bg-gray-200 p-2 rounded"
           >
             <i className="bi bi-person mr-2"></i>
@@ -46,13 +47,16 @@ const SideNav = () => {
           </Link>
         </li>
         <li>
-          <Link
-            href="/"
+          <form
             className="flex items-center text-black hover:bg-gray-200 p-2 rounded"
+            action={async () => {
+              "use server";
+              await signOut();
+            }}
           >
             <i className="bi bi-power mr-2"></i>
-            <span>Logout</span>
-          </Link>
+            <button type="submit">Logout</button>
+          </form>
         </li>
       </ul>
     </div>
