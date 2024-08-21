@@ -11,7 +11,7 @@ const client = new Client({
 async function connect() {
   try {
     await client.connect();
-    console.log("Connected");
+    // console.log("Connected");
   } catch (error) {
     console.error("Error in connecting to DataBase : ", error.stack);
   }
