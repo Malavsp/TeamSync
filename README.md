@@ -2,6 +2,13 @@
 
 **TeamSync** is a platform for employee management designed in order to facilitate the administering of workforce and speeds up the implementation of the tedious tasks.
 
+## Table of Contents
+
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [License](#license)
+
+
 ## Features
  - Responsive Design
  - Managament tools 
@@ -47,10 +54,11 @@ To get a local copy up and running, follow these steps:
     <br>
     <br>
     **Development :**` npm run dev`
-    <br>
+    <br> 
     <br>
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
- 
+
+## Usage 
 ### Employee Management:
 
 **Add, Edit, and Delete Employees:** Admins can perform full CRUD operations on employee records, including personal details, job roles, salaries, and department assignments.
@@ -66,12 +74,6 @@ Authentication and Security:
 Role-Based Access Control: Different access levels for admins and employees, ensuring that users can only access the information and features relevant to their role.
 
 
+## License
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
